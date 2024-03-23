@@ -228,9 +228,6 @@ jobs:
           GIT_TOKEN: ${{ vars.GIT_PAT }}
           GIT_EMAIL: reyshazni@gmail.com
         run: |
-          cd ..
-          sudo mkdir mirror
-          cd mirror
           git config --global user.email ${GIT_EMAIL}
           git config --global user.name ${GIT_USER}
           git clone https://github.com/antrein/prod-yml.git
