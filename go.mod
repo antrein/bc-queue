@@ -3,6 +3,7 @@ module antrein/bc-queue
 go 1.22.0
 
 require (
+	github.com/antrein/proto-repository v0.0.0-20240323110514-f9d66eb000e5
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	google.golang.org/grpc v1.62.1
 	google.golang.org/protobuf v1.32.0
