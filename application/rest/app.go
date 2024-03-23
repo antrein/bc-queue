@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"antrein/bc-queue/client"
 	"antrein/bc-queue/model/config"
 	"compress/gzip"
 	"fmt"
@@ -46,6 +47,14 @@ func ApplicationDelegate(cfg *config.Config) (http.Handler, error) {
 	})
 	mux.HandleFunc("/bc/queue/ping", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "pong!")
+	})
+	mux.HandleFunc("/bc/queue/grpc", func(w http.ResponseWriter, r *http.Request) {
+		name := r.URL.Query().Get("name")
+		msg, err := client.Call(name)
+		if err != nil {
+			fmt.Fprintln(w, "Error connecting to gRPC server "+err.Error())
+		}
+		fmt.Fprintln(w, msg)
 	})
 
 	handlerWithMiddleware := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
