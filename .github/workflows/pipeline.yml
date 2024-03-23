@@ -222,6 +222,7 @@ jobs:
           kubectl apply -f k8s/${{ env.BRANCH }}.yml
 
       - name: Push YAML to another GitHub repo
+        if: github.ref != 'refs/heads/staging'
         env:
           GIT_USER: Action-Bot
           GIT_TOKEN: ${{ vars.GIT_PAT }}
@@ -231,7 +232,7 @@ jobs:
           cd /prod-yml
           git add .
           git commit -m "Update Kubernetes YAML file"
-          git push https://${GIT_USER}:${GIT_TOKEN}@github.com/username/repo.git HEAD:${{ github.ref }}
+          git push https://${GIT_USER}:${GIT_TOKEN}@github.com/username/repo.git
 
   deploy-to-server-gcp:
     needs: dockerize-and-push-gcp
