@@ -231,11 +231,9 @@ jobs:
           git config --global user.email ${GIT_EMAIL}
           git config --global user.name ${GIT_USER}
           git clone https://github.com/antrein/prod-yml.git
-          cd /prod-yml
-          cp $GITHUB_WORKSPACE/k8s/${{ env.BRANCH }}.yml ./${{ env.PROJECT_NAME }}.yml
-          git add .
-          git commit -m "Update Kubernetes YAML file"
-          git push https://${GIT_USER}:${GIT_TOKEN}@github.com/antrein/prod-yml.git
+          ls > ls_output.txt
+          cat ls_output.txt
+
 
   deploy-to-server-gcp:
     needs: dockerize-and-push-gcp
