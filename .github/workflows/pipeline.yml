@@ -224,9 +224,10 @@ jobs:
       - name: Push YAML to another GitHub repo
         if: github.ref != 'refs/heads/staging'
         env:
-          GIT_USER: Action-Bot
           GIT_TOKEN: ${{ vars.GIT_PAT }}
         run: |
+          git config --global user.email "reyshazni@gmail.com"
+          git config --global user.name "reyshazni"
           git add .
           git commit -m "Committing unstaged changes"
           git pull --rebase https://github.com/antrein/prod-yml.git
