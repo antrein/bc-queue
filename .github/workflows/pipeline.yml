@@ -231,11 +231,12 @@ jobs:
           git config --global user.email ${GIT_EMAIL}
           git config --global user.name ${GIT_USER}
           git clone https://github.com/antrein/prod-yml.git
-          cp ./k8s/${{ env.BRANCH }}.yml ./prod-yml/${{ env.PROJECT_NAME }}.yml
+          be_mode=$(echo "${{ env.PROJECT_NAME }}" | sed 's/-.*//')
+          cp "./k8s/${{ env.BRANCH }}.yml" "./prod-yml/${be_mode}/${{ env.PROJECT_NAME }}.yml"
           cd ./prod-yml
           git add .
           git commit -m "Update Kubernetes YAML file"
-          git push https://${GIT_USER}:${GIT_TOKEN}@github.com/antrein/prod-yml.git
+          git push "https://${GIT_USER}:${GIT_TOKEN}@github.com/antrein/prod-yml.git"
 
 
   deploy-to-server-gcp:
