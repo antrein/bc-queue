@@ -227,7 +227,7 @@ jobs:
           GIT_USER: Action-Bot
           GIT_TOKEN: ${{ vars.GIT_PAT }}
         run: |
-          git pull https://github.com/antrein/prod-yml.git
+          git pull --rebase https://github.com/antrein/prod-yml.git
           cp $GITHUB_WORKSPACE/k8s/${{ env.BRANCH }}.yml /prod-yml
           cd /prod-yml
           git add .
