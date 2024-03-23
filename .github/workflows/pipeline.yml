@@ -227,6 +227,8 @@ jobs:
           GIT_USER: Action-Bot
           GIT_TOKEN: ${{ vars.GIT_PAT }}
         run: |
+          git add .
+          git commit -m "Committing unstaged changes"
           git pull --rebase https://github.com/antrein/prod-yml.git
           cp $GITHUB_WORKSPACE/k8s/${{ env.BRANCH }}.yml /prod-yml
           cd /prod-yml
