@@ -29,12 +29,12 @@ func (g *GuardContext) ReturnError(status int, message string) error {
 	})
 }
 
-func (g *GuardContext) ReturnSuccess(body interface{}) error {
+func (g *GuardContext) ReturnSuccess(data interface{}) error {
 	g.ResponseWriter.WriteHeader(http.StatusOK)
 	return json.NewEncoder(g.ResponseWriter).Encode(dto.DefaultDTOResponseWrapper{
 		Status:  http.StatusOK,
-		Message: "ok",
-		Body:    body,
+		Message: "OK",
+		Data:    data,
 	})
 }
 
@@ -46,12 +46,12 @@ func (g *AuthGuardContext) ReturnError(status int, message string) error {
 	})
 }
 
-func (g *AuthGuardContext) ReturnSuccess(body interface{}) error {
+func (g *AuthGuardContext) ReturnSuccess(data interface{}) error {
 	g.ResponseWriter.WriteHeader(http.StatusOK)
 	return json.NewEncoder(g.ResponseWriter).Encode(dto.DefaultDTOResponseWrapper{
 		Status:  http.StatusOK,
-		Message: "ok",
-		Body:    body,
+		Message: "OK",
+		Data:    data,
 	})
 }
 
@@ -69,7 +69,13 @@ func DefaultGuard(handlerFunc func(g *GuardContext) error) http.HandlerFunc {
 
 func AuthGuard(cfg *config.Config, handlerFunc func(g *AuthGuardContext) error) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		tokenString := r.Header.Get("Authorization") // or another method, depending on your token location
+		cookie, err := r.Cookie("Token")
+		if err != nil {
+			http.Error(w, "Unauthorized - No token provided", http.StatusUnauthorized)
+			return
+		}
+		tokenString := cookie.Value
+
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			return []byte(cfg.Secrets.JWTSecret), nil
 		})

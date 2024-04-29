@@ -1,11 +1,12 @@
 package config
 
 type Config struct {
-	Server   ServerConfig   `json:"server"`
-	Database DatabaseConfig `json:"database"`
-	Secrets  SecretConfig   `json:"secrets"`
-	Stage    string         `json:"stage"`
-	SMTP     SMTPConfig     `json:"smtp"`
+	Server     ServerConfig   `json:"server"`
+	Database   DatabaseConfig `json:"database"`
+	Secrets    SecretConfig   `json:"secrets"`
+	Stage      string         `json:"stage"`
+	SMTP       SMTPConfig     `json:"smtp"`
+	GRPCConfig GRPCConfig     `json:"grpc"`
 }
 
 type PostgreConfig struct {
@@ -17,6 +18,7 @@ type RedisConfig struct {
 	Host     string `json:"host"`
 	Password string `json:"password"`
 	DB       int    `json:"db"`
+	URL      string `json:"url"`
 }
 
 type ServerConfig struct {
@@ -43,4 +45,8 @@ type SMTPConfig struct {
 	Port     string `json:"port"`
 	User     string `json:"user"`
 	Password string `json:"password"`
+}
+
+type GRPCConfig struct {
+	DashboardQueue string `json:"dashboard_queue"`
 }

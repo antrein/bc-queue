@@ -2,13 +2,13 @@ package dto
 
 type DefaultDTOResponseWrapper struct {
 	Status  int         `json:"status"`
-	Message string      `json:"msg"`
-	Body    interface{} `json:"data"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 type NoBodyDTOResponseWrapper struct {
 	Status  int    `json:"status"`
-	Message string `json:"msg"`
+	Message string `json:"message"`
 }
 
 type PaginationDTOWrapper struct {

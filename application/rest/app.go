@@ -1,7 +1,9 @@
 package rest
 
 import (
+	"antrein/bc-queue/application/common/repository"
 	"antrein/bc-queue/client"
+	"antrein/bc-queue/internal/handler/wr"
 	"antrein/bc-queue/model/config"
 	"compress/gzip"
 	"fmt"
@@ -12,7 +14,7 @@ import (
 func setupCORS(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE, PATCH")
-	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
+	w.Header().Set("Agccess-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
 }
 
 type gzipResponseWriter struct {
@@ -39,14 +41,17 @@ func compressHandler(next http.Handler) http.Handler {
 	})
 }
 
-func ApplicationDelegate(cfg *config.Config) (http.Handler, error) {
+func ApplicationDelegate(cfg *config.Config, repo *repository.CommonRepository) (http.Handler, error) {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/bc/queue/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/bc/queue", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Makan nasi pagi-pagi, ngapain kamu disini?")
 	})
 	mux.HandleFunc("/bc/queue/ping", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "pong!")
+	})
+	mux.HandleFunc("/bc/queue/redirect", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "https://marathon.redirect.antrein.com/", http.StatusFound)
 	})
 	mux.HandleFunc("/bc/queue/grpc", func(w http.ResponseWriter, r *http.Request) {
 		name := r.URL.Query().Get("name")
@@ -56,6 +61,10 @@ func ApplicationDelegate(cfg *config.Config) (http.Handler, error) {
 		}
 		fmt.Fprintln(w, msg)
 	})
+
+	// Waiting room
+	wrRouter := wr.New(cfg, repo)
+	wrRouter.RegisterHandler(mux)
 
 	handlerWithMiddleware := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		setupCORS(w)
