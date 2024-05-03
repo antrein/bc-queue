@@ -69,7 +69,7 @@ func DefaultGuard(handlerFunc func(g *GuardContext) error) http.HandlerFunc {
 
 func AuthGuard(cfg *config.Config, handlerFunc func(g *AuthGuardContext) error) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		cookie, err := r.Cookie("Token")
+		cookie, err := r.Cookie("antrein_waiting_room")
 		if err != nil {
 			http.Error(w, "Unauthorized - No token provided", http.StatusUnauthorized)
 			return

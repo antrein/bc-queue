@@ -5,6 +5,7 @@ import (
 	guard "antrein/bc-queue/application/middleware"
 	"antrein/bc-queue/model/config"
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 )
@@ -28,7 +29,9 @@ func (h *Handler) RegisterHandler(app *http.ServeMux) {
 func (h *Handler) RegisterQueue(g *guard.GuardContext) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	config, err := h.repo.ConfigRepo.GetProjectConfig(ctx, "project1")
+	projectID := g.Request.Host
+	fmt.Println(projectID)
+	config, err := h.repo.ConfigRepo.GetProjectConfig(ctx, projectID)
 	if err != nil {
 		return g.ReturnError(500, err.Error())
 	}
