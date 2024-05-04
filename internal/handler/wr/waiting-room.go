@@ -29,7 +29,7 @@ func (h *Handler) RegisterHandler(app *http.ServeMux) {
 func (h *Handler) RegisterQueue(g *guard.GuardContext) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	projectID := g.Request.Host
+	projectID := g.Request.Referer()
 	fmt.Println(projectID)
 	config, err := h.repo.ConfigRepo.GetProjectConfig(ctx, projectID)
 	if err != nil {
