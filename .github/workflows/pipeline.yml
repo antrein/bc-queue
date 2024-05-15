@@ -231,7 +231,7 @@ jobs:
           git push https://${GIT_USER}:${GIT_TOKEN}@github.com/antrein/prod-yml.git
 
   deploy-to-server-azure:
-    needs: dockerize-and-push-azure
+    needs: dockerize-and-push
     if: vars.CLOUD_PLATFORM == 'azure'
     runs-on: ubuntu-latest
     environment: ${{ needs.dockerize-and-push-azure.outputs.BRANCH }}
