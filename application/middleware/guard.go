@@ -18,7 +18,7 @@ type GuardContext struct {
 type AuthGuardContext struct {
 	ResponseWriter http.ResponseWriter
 	Request        *http.Request
-	Claims         entity.CustomClaim
+	Claims         entity.JWTClaim
 }
 
 func (g *GuardContext) ReturnError(status int, message string) error {
@@ -94,7 +94,7 @@ func AuthGuard(cfg *config.Config, handlerFunc func(g *AuthGuardContext) error) 
 		authGuardCtx := AuthGuardContext{
 			ResponseWriter: w,
 			Request:        r,
-			Claims:         entity.CustomClaim{},
+			Claims:         entity.JWTClaim{},
 		}
 
 		if err := handlerFunc(&authGuardCtx); err != nil {

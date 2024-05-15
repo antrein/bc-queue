@@ -3,9 +3,9 @@ package wr
 import (
 	"antrein/bc-queue/application/common/repository"
 	guard "antrein/bc-queue/application/middleware"
+	"antrein/bc-queue/internal/utils"
 	"antrein/bc-queue/model/config"
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -29,8 +29,11 @@ func (h *Handler) RegisterHandler(app *http.ServeMux) {
 func (h *Handler) RegisterQueue(g *guard.GuardContext) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	projectID := g.Request.Referer()
-	fmt.Println(projectID)
+	host := g.Request.Referer()
+	projectID, err := utils.ExtractProjectID(host)
+	if err != nil {
+		return g.ReturnError(500, err.Error())
+	}
 	config, err := h.repo.ConfigRepo.GetProjectConfig(ctx, projectID)
 	if err != nil {
 		return g.ReturnError(500, err.Error())
