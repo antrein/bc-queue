@@ -24,9 +24,9 @@ func New(cfg *config.Config, rc *redis.Client, gc *grpc.ClientConn) *Repository 
 	}
 }
 
-func (r *Repository) GetProjectConfig(ctx context.Context, projectId string) (*pb.ProjectConfigResponse, error) {
+func (r *Repository) GetProjectConfig(ctx context.Context, projectID string) (*pb.ProjectConfigResponse, error) {
 	svc := pb.NewProjectConfigServiceClient(r.grpcClient)
-	req := &pb.ConfigRequest{ProjectId: projectId}
+	req := &pb.ConfigRequest{ProjectId: projectID}
 	config, err := svc.GetProjectConfig(ctx, req)
 	if err != nil {
 		return nil, err
