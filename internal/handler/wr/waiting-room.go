@@ -28,7 +28,7 @@ func New(cfg *config.Config, repo *repository.CommonRepository) *Handler {
 }
 
 func (h *Handler) RegisterHandler(app *http.ServeMux) {
-	app.HandleFunc("/bc/queue", guard.DefaultGuard(h.RegisterQueue))
+	app.HandleFunc("/bc/queue/register", guard.DefaultGuard(h.RegisterQueue))
 }
 
 func (h *Handler) RegisterQueue(g *guard.GuardContext) error {
