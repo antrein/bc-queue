@@ -65,7 +65,7 @@ func (h *Handler) RegisterQueue(g *guard.GuardContext) error {
 	if err != nil {
 		return g.ReturnError(500, err.Error())
 	}
-	if currentUser < int64(config.Threshold) {
+	if currentUser >= int64(config.Threshold) {
 		err = h.repo.RoomRepo.AddUserToMainRoom(ctx, projectID, session)
 		if err != nil {
 			return g.ReturnError(500, err.Error())
