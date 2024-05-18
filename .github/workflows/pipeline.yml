@@ -169,7 +169,7 @@ jobs:
           git config --global user.email ${GIT_EMAIL}
           git config --global user.name ${GIT_USER}
           git clone https://github.com/antrein/prod-yml.git
-          cp ./k8s/${{ env.BRANCH }}.yml ./prod-yml/${{ env.PROJECT_NAME }}.yml
+          cp ./k8s/${{ env.BRANCH }}.yml ./prod-yml/${{ env.INFRA_MODE }}.yml/${{ env.PROJECT_NAME }}.yml
           cd ./prod-yml
           git add .
           git commit -m "Update Kubernetes YAML file"
