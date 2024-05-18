@@ -64,9 +64,8 @@ jobs:
 
       - name: Add Config
         run: |
-          jq --arg be_mode "${{ vars.CONFIG_BE_MODE }}" --arg infra_mode "${{ vars.CONFIG_INFRA_MODE }}" \
-             '. + {be_mode: $be_mode, infra_mode: $infra_mode}' ./files/secrets/secrets.config.json > ./files/secrets/secrets.tmp \
-             && mv ./files/secrets/secrets.tmp ./files/secrets/secrets.config.json
+          jq '.be_mode="${{ vars.CONFIG_BE_MODE }}"' ./files/secrets/secrets.config.json
+          jq '.infra_mode="${{ vars.CONFIG_INFRA_MODE }}"' ./files/secrets/secrets.config.json
 
       - name: Test secret
         run: |
