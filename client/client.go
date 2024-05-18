@@ -10,8 +10,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func Call(name string) (string, error) {
-	conn, err := grpc.Dial("bc-dashboard.production.svc.cluster.local:9090", grpc.WithTransportCredentials(insecure.NewCredentials()))
+func Call(name string, grpcUrl string) (string, error) {
+	conn, err := grpc.Dial(grpcUrl, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return "", err
 	}

@@ -22,14 +22,6 @@ func New(cfg *config.Config, rc *redis.Client) *Repository {
 	}
 }
 
-func (r *Repository) AddUserToWaitingRoom(ctx context.Context, projectID string, session entity.Session) error {
-	return r.AddUserToRoom(ctx, fmt.Sprintf("%s:waiting", projectID), session)
-}
-
-func (r *Repository) AddUserToMainRoom(ctx context.Context, projectID string, session entity.Session) error {
-	return r.AddUserToRoom(ctx, fmt.Sprintf("%s:main", projectID), session)
-}
-
 func (r *Repository) AddUserToRoom(ctx context.Context, key string, session entity.Session) error {
 	data, err := json.Marshal(session)
 	if err != nil {
@@ -37,6 +29,14 @@ func (r *Repository) AddUserToRoom(ctx context.Context, key string, session enti
 	}
 	_, err = r.redisClient.LPush(ctx, key, data).Result()
 	return err
+}
+
+func (r *Repository) AddUserToWaitingRoom(ctx context.Context, projectID string, session entity.Session) error {
+	return r.AddUserToRoom(ctx, fmt.Sprintf("%s:waiting", projectID), session)
+}
+
+func (r *Repository) AddUserToMainRoom(ctx context.Context, projectID string, session entity.Session) error {
+	return r.AddUserToRoom(ctx, fmt.Sprintf("%s:main", projectID), session)
 }
 
 func (r *Repository) RemoveUserFromRoom(ctx context.Context, projectID string, roomType string, sessionID string) error {

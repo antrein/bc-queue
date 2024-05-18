@@ -55,7 +55,7 @@ func ApplicationDelegate(cfg *config.Config, repo *repository.CommonRepository) 
 	})
 	mux.HandleFunc("/bc/queue/grpc", func(w http.ResponseWriter, r *http.Request) {
 		name := r.URL.Query().Get("name")
-		msg, err := client.Call(name)
+		msg, err := client.Call(name, "bc-dashboard.production.svc.cluster.local:9090")
 		if err != nil {
 			fmt.Fprintln(w, "Error connecting to gRPC server "+err.Error())
 		}

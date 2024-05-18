@@ -6,6 +6,7 @@ require (
 	github.com/antrein/proto-repository v0.0.4
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/google/uuid v1.6.0
 	github.com/redis/go-redis/v9 v9.5.1
 	google.golang.org/grpc v1.62.1
 )

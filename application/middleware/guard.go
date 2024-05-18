@@ -77,7 +77,7 @@ func AuthGuard(cfg *config.Config, handlerFunc func(g *AuthGuardContext) error) 
 		tokenString := cookie.Value
 
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			return []byte(cfg.Secrets.JWTSecret), nil
+			return []byte(cfg.Secrets.WaitingRoomSecret), nil
 		})
 
 		if err != nil || !token.Valid {

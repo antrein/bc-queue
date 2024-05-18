@@ -37,7 +37,8 @@ type DatabaseConfig struct {
 }
 
 type SecretConfig struct {
-	JWTSecret string `json:"jwt_secret"`
+	WaitingRoomSecret string `json:"waiting_room_secret"`
+	MainRoomSecret    string `json:"main_room_secret"`
 }
 
 type SMTPConfig struct {
