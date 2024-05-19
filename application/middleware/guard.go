@@ -5,6 +5,7 @@ import (
 	"antrein/bc-queue/model/dto"
 	"antrein/bc-queue/model/entity"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -55,6 +56,26 @@ func (g *AuthGuardContext) ReturnSuccess(data interface{}) error {
 	})
 }
 
+func (g *AuthGuardContext) ReturnEvent(data interface{}) error {
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	_, err = fmt.Fprintf(g.ResponseWriter, "data: %s\n\n", jsonData)
+	if err != nil {
+		return err // Handle writing errors
+	}
+
+	if flusher, ok := g.ResponseWriter.(http.Flusher); ok {
+		flusher.Flush()
+	} else {
+		return fmt.Errorf("streaming unsupported")
+	}
+
+	return nil
+}
+
 func DefaultGuard(handlerFunc func(g *GuardContext) error) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		guardCtx := GuardContext{
@@ -69,13 +90,11 @@ func DefaultGuard(handlerFunc func(g *GuardContext) error) http.HandlerFunc {
 
 func AuthGuard(cfg *config.Config, handlerFunc func(g *AuthGuardContext) error) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		cookie, err := r.Cookie("antrein_waiting_room")
-		if err != nil {
+		tokenString := r.URL.Query().Get("token")
+		if tokenString == "" {
 			http.Error(w, "Unauthorized - No token provided", http.StatusUnauthorized)
 			return
 		}
-		tokenString := cookie.Value
-
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			return []byte(cfg.Secrets.WaitingRoomSecret), nil
 		})
@@ -85,7 +104,19 @@ func AuthGuard(cfg *config.Config, handlerFunc func(g *AuthGuardContext) error) 
 			return
 		}
 
-		_, ok := token.Claims.(jwt.MapClaims)
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		projectID, ok := claims["project_id"].(string)
+		if !ok {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		sessionID, ok := claims["session_id"].(string)
 		if !ok {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
@@ -94,7 +125,10 @@ func AuthGuard(cfg *config.Config, handlerFunc func(g *AuthGuardContext) error) 
 		authGuardCtx := AuthGuardContext{
 			ResponseWriter: w,
 			Request:        r,
-			Claims:         entity.JWTClaim{},
+			Claims: entity.JWTClaim{
+				ProjectID: projectID,
+				SessionID: sessionID,
+			},
 		}
 
 		if err := handlerFunc(&authGuardCtx); err != nil {
