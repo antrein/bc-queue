@@ -3,12 +3,13 @@ module antrein/bc-queue
 go 1.22.0
 
 require (
-	github.com/antrein/proto-repository v0.0.4
+	github.com/antrein/proto-repository v0.0.5
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/uuid v1.6.0
 	github.com/redis/go-redis/v9 v9.5.1
 	google.golang.org/grpc v1.62.1
+	google.golang.org/protobuf v1.32.0
 )
 
 require (
@@ -22,6 +23,5 @@ require (
 	golang.org/x/sys v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240123012728-ef4313101c80 // indirect
-	google.golang.org/protobuf v1.32.0 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 )

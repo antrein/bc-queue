@@ -2,7 +2,6 @@ package rest
 
 import (
 	"antrein/bc-queue/application/common/repository"
-	"antrein/bc-queue/client"
 	"antrein/bc-queue/internal/handler/wr"
 	"antrein/bc-queue/model/config"
 	"compress/gzip"
@@ -49,17 +48,6 @@ func ApplicationDelegate(cfg *config.Config, repo *repository.CommonRepository) 
 	})
 	mux.HandleFunc("/bc/queue/ping", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "pong!")
-	})
-	mux.HandleFunc("/bc/queue/redirect", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "https://marathon.redirect.antrein.com/", http.StatusFound)
-	})
-	mux.HandleFunc("/bc/queue/grpc", func(w http.ResponseWriter, r *http.Request) {
-		name := r.URL.Query().Get("name")
-		msg, err := client.Call(name, cfg.GRPCConfig.DashboardQueue)
-		if err != nil {
-			fmt.Fprintln(w, "Error connecting to gRPC server "+err.Error())
-		}
-		fmt.Fprintln(w, msg)
 	})
 
 	// Waiting room
