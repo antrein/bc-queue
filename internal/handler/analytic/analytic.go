@@ -39,7 +39,7 @@ func (s *Server) GetAnalyticData(ctx context.Context, in *pb.AnalyticRequest) (*
 	}, nil
 }
 
-func (s *Server) StreamAnalyticData(in *pb.AnalyticRequest, stream pb.AnalyticService_StreamRealtimeDataServer) error {
+func (s *Server) StreamRealtimeData(in *pb.AnalyticRequest, stream pb.AnalyticService_StreamRealtimeDataServer) error {
 	projectID := in.GetProjectId()
 	ctx := context.Background()
 	ticker := time.NewTicker(1 * time.Second)
