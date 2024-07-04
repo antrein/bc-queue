@@ -3,6 +3,7 @@ package config
 import (
 	"antrein/bc-queue/model/config"
 	"context"
+	"fmt"
 
 	pb "github.com/antrein/proto-repository/pb/bc"
 
@@ -29,6 +30,7 @@ func (r *Repository) GetProjectConfig(ctx context.Context, projectID string) (*p
 	req := &pb.ConfigRequest{ProjectId: projectID}
 	config, err := svc.GetProjectConfig(ctx, req)
 	if err != nil {
+		fmt.Println("GRPC Error: ", err)
 		return nil, err
 	}
 	return config, nil

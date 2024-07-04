@@ -45,6 +45,7 @@ func (h *Handler) RegisterQueue(g *guard.GuardContext) error {
 	}
 	currentUser, err := h.repo.RoomRepo.CountUserInRoom(ctx, projectID, "main")
 	if err != nil {
+		fmt.Println("Redis Count User Error: ", err)
 		return g.ReturnError(500, err.Error())
 	}
 	sessionID := uuid.New()
@@ -64,12 +65,14 @@ func (h *Handler) RegisterQueue(g *guard.GuardContext) error {
 	}
 	waitingRoomToken, err := utils.GenerateJWTToken(h.cfg.Secrets.WaitingRoomSecret, waitingRoomClaim)
 	if err != nil {
+		fmt.Println("Generate JWT Error: ", err)
 		return g.ReturnError(500, err.Error())
 	}
 	// if currentUser <= int64(config.Threshold) || time.Now().Before(config.QueueEnd.AsTime()) || time.Now().After(config.QueueEnd.AsTime()) {
 	if currentUser < int64(config.Threshold) {
 		err = h.repo.RoomRepo.AddUserToMainRoom(ctx, projectID, session, int(config.SessionTime))
 		if err != nil {
+			fmt.Println("Adding User to Main Room: ", err)
 			return g.ReturnError(500, err.Error())
 		}
 		mainRoomClaim := entity.JWTClaim{
@@ -84,6 +87,7 @@ func (h *Handler) RegisterQueue(g *guard.GuardContext) error {
 		}
 		mainRoomToken, err := utils.GenerateJWTToken(h.cfg.Secrets.MainRoomSecret, mainRoomClaim)
 		if err != nil {
+			fmt.Println("Generating Main Room Token Error: ", err)
 			return g.ReturnError(500, err.Error())
 		}
 		tokens := dto.RegisterQueueResponse{
@@ -94,6 +98,7 @@ func (h *Handler) RegisterQueue(g *guard.GuardContext) error {
 	}
 	err = h.repo.RoomRepo.AddUserToWaitingRoom(ctx, projectID, session)
 	if err != nil {
+		fmt.Println("Adding User to Waiting Room: ", err)
 		return g.ReturnError(500, err.Error())
 	}
 	tokens := dto.RegisterQueueResponse{
