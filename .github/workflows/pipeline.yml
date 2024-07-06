@@ -216,3 +216,5 @@ jobs:
           git add .
           git diff --quiet && git diff --staged --quiet || git commit -am 'sync version'
           git push https://${GIT_USER}:${GIT_TOKEN}@github.com/antrein/prod-yml.git
+
+          
